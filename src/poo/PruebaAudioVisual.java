@@ -3,7 +3,7 @@ import modelo.*;
 
 public class PruebaAudioVisual {
 	public static void main(String[] args) {
-        System.out.println("Hello from Eclipse!");
+        System.out.println("--- PRUEBA DE POLIMORFISMO Y OCP ---");
 
         // 1. Crear instancias de las clases de relación (Actor, Temporada, Investigador)
         Actor actorPelicula = new Actor("Sam Worthington", "Jake Sully");
@@ -17,7 +17,6 @@ public class PruebaAudioVisual {
 
 
         // 2. Crear instancias de TODAS las subclases
-        // Aumentamos el tamaño del array a 5
         ContenidoAudiovisual[] contenidos = new ContenidoAudiovisual[5];
         
         // Clases Originales
@@ -36,9 +35,16 @@ public class PruebaAudioVisual {
         
 
         // Mostrar los detalles de CADA contenido audiovisual
-        // Gracias al polimorfismo, este bucle funciona para TODAS las clases.
+        // El bucle ahora llama al método getDetallesEspecificos(), demostrando el polimorfismo.
         for (ContenidoAudiovisual contenido : contenidos) {
-            contenido.mostrarDetalles();
+            
+            // Se imprimen los detalles comunes y luego los detalles específicos
+            String detallesComunes = "ID: " + contenido.getId() + " | Título: " + contenido.getTitulo() + " | Duración: " + contenido.getDuracionEnMinutos() + " min | Género: " + contenido.getGenero();
+            
+            System.out.println("------------------------------------------------");
+            System.out.println(detallesComunes);
+            System.out.println("Detalles específicos: " + contenido.getDetallesEspecificos());
         }
+        System.out.println("------------------------------------------------");
     }
 }
