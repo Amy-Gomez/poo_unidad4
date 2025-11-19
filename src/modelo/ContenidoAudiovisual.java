@@ -15,6 +15,11 @@ public abstract class ContenidoAudiovisual {
 		this.duracionEnMinutos = duracionEnMinutos;
 		this.genero = genero;
 	}
+    
+    // metodo abstracto añadido (obliga a subclases a definir sus propios detalles). 
+	//Esto asegura que la clase VistaTerminal no necesite cambiar cuando se añade un nuevo tipo de contenido (OCP).
+    public abstract String getDetallesEspecificos(); 
+
 
 	// Obtener el ID único del contenido
 	public int getId() {

@@ -11,6 +11,14 @@ public class Pelicula extends ContenidoAudiovisual {
 		this.estudio = estudio; // Asignar el estudio.
 		this.actorPrincipal = actorPrincipal; // Establecer la referencia al objeto Actor
 	}
+    
+    // implementacion de el método abstracto (Polimorfismo para detalles específicos)
+    @Override
+    public String getDetallesEspecificos() {
+        // Usa el carácter de sangría que estabas usando:    
+        return "   [PELÍCULA] Estudio: " + this.estudio + 
+               "\n   Actor Principal: " + this.actorPrincipal.getNombre();
+    }
 
 	// Obtener el nombre del estudio
 	public String getEstudio() {

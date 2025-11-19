@@ -13,6 +13,19 @@ public class SerieDeTV extends ContenidoAudiovisual {
 		this.temporadas = new ArrayList<>(); // Inicializar la lista de temporadas al crear la serie
 	}
 
+	// implementacion del metodo abstracto
+	@Override
+	public String getDetallesEspecificos() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("   [SERIE] Temporadas: ").append(this.temporadas.size());
+
+		for (Temporada t : this.temporadas) {
+			// Usa el toString() de Temporada (que ya es legible)
+			sb.append("\n     - ").append(t.toString());
+		}
+		return sb.toString();
+	}
+
 	// Método para añadir un nuevo objeto Temporada a la lista de la serie
 	public void agregarTemporada(Temporada temporada) {
 		this.temporadas.add(temporada);

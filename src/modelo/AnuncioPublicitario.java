@@ -15,6 +15,15 @@ public class AnuncioPublicitario extends ContenidoAudiovisual {
 		this.protagonista = protagonista; // Establecer la referencia al objeto Actor
 	}
 
+    // implementacion del metodo abstracto (Detalles para Anuncio Publicitario)
+    @Override
+    public String getDetallesEspecificos() {
+        String nombreProtagonista = (protagonista != null) ? protagonista.getNombre() : "N/A";
+        return "   [ANUNCIO] Marca: " + this.marca + 
+               "\n   Agencia: " + this.agencia +
+               "\n   Protagonista: " + nombreProtagonista;
+    }
+
 	// Obtener la marca del anuncio
 	public String getMarca() {
 		return marca;

@@ -16,6 +16,15 @@ public class VideoMusical extends ContenidoAudiovisual {
 		this.actorInvitado = actorInvitado; // Se establece la relación
 	}
 
+    // implementacion del metodo abstracto (Detalles para Video Musical)
+    @Override
+    public String getDetallesEspecificos() {
+        String actor = (actorInvitado != null) ? actorInvitado.getNombre() : "N/A";
+        return "   [VIDEO MUSICAL] Artista: " + this.artista + 
+               "\n   Álbum: " + this.album + 
+               "\n   Actor Invitado: " + actor;
+    }
+
 	// Getters y setters para los nuevos atributos
 	public String getArtista() {
 		return artista;
