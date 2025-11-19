@@ -1,38 +1,25 @@
-/**
- * Class SerieDeTV
- */
 package modelo;
-import java.util.List;
+
 import java.util.ArrayList;
-// Subclase SerieDeTV que extiende de ContenidoAudiovisual
+import java.util.List;
+
+// Clase que hereda de ContenidoAudiovisual para modelar una Serie de Televisión
 public class SerieDeTV extends ContenidoAudiovisual {
-    private List <Temporada> temporadas; // La lista de temporadas ahora modela la relación
+	private List<Temporada> temporadas; // Declarar una lista para almacenar objetos Temporada
 
-    public SerieDeTV(String titulo, int duracionEnMinutos, String genero) {
-        super(titulo, duracionEnMinutos, genero);
-        this.temporadas = new ArrayList<>(); //Crea un arreglo que contenga una lista
-    }
+	// Constructor para inicializar una nueva Serie de TV
+	public SerieDeTV(String titulo, int duracionEnMinutos, String genero) {
+		super(titulo, duracionEnMinutos, genero); // Llamar al constructor de la clase padre.
+		this.temporadas = new ArrayList<>(); // Inicializar la lista de temporadas al crear la serie
+	}
 
-    public void agregarTemporada(Temporada temporada) {
-        this.temporadas.add(temporada);
-    }
+	// Método para añadir un nuevo objeto Temporada a la lista de la serie
+	public void agregarTemporada(Temporada temporada) {
+		this.temporadas.add(temporada);
+	}
 
-    public List <Temporada>getTemporadas() {
-        return temporadas;
-    }
-    
-    @Override
-    public void mostrarDetalles() {
-        System.out.println("Detalles de la serie de TV:");
-        System.out.println("ID: " + getId());
-        System.out.println("Título: " + getTitulo());
-        System.out.println("Duración en minutos: " + getDuracionEnMinutos());
-        System.out.println("Género: " + getGenero());
-        System.out.println("Temporadas: " + this.temporadas.size());
-        
-        for (Temporada t: temporadas) {
-        	System.out.println("-" + t.toString());
-        } 
-        System.out.println();
-    }
+	// Obtener la lista completa de objetos Temporada asociados a esta serie
+	public List<Temporada> getTemporadas() {
+		return temporadas;
+	}
 }

@@ -1,50 +1,53 @@
 package modelo;
 
+// Clase abstracta base para todos los contenidos (Películas, Series, Documentales, etc.).
 public abstract class ContenidoAudiovisual {
-    private static int contar = 0;
-    private String titulo;
-    private int duracionEnMinutos;
-    private String genero;
-    private int id;
+	private static int contar = 0; // Contador estático para generar IDs unicos
+	protected int id; // Identificador único del contenido. Usé 'protected' para acceso en subclases
+	private String titulo; // Título del contenido.
+	private int duracionEnMinutos; // Duración del contenido
+	private String genero; // Género cinematográfico del contenido
 
-    public ContenidoAudiovisual(String titulo, int duracionEnMinutos, String genero) {
-        this.id = contar++;
-        this.titulo = titulo;
-        this.duracionEnMinutos = duracionEnMinutos;
-        this.genero = genero;
-    }
+	// Constructor para inicializar los atributos de un Contenido Audiovisual.
+	public ContenidoAudiovisual(String titulo, int duracionEnMinutos, String genero) {
+		this.id = ++contar; // Incrementar el contador estático y asignar el nuevo valor como id
+		this.titulo = titulo;
+		this.duracionEnMinutos = duracionEnMinutos;
+		this.genero = genero;
+	}
 
-    // Getter y Setter para el campo 'titulo'
-    public String getTitulo() {
-        return titulo;
-    }
+	// Obtener el ID único del contenido
+	public int getId() {
+		return id;
+	}
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
+	// Obtener el título
+	public String getTitulo() {
+		return titulo;
+	}
 
-    // Getter y Setter para el campo 'duracionEnMinutos'
-    public int getDuracionEnMinutos() {
-        return duracionEnMinutos;
-    }
+	// Asignar un nuevo título
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
 
-    public void setDuracionEnMinutos(int duracionEnMinutos) {
-        this.duracionEnMinutos = duracionEnMinutos;
-    }
+	// Obtener la duración en minutos
+	public int getDuracionEnMinutos() {
+		return duracionEnMinutos;
+	}
 
-    // Getter y Setter para el campo 'genero'
-    public String getGenero() {
-        return genero;
-    }
+	// Asignar una nueva duración en minutos
+	public void setDuracionEnMinutos(int duracionEnMinutos) {
+		this.duracionEnMinutos = duracionEnMinutos;
+	}
 
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
+	// Obtener el género
+	public String getGenero() {
+		return genero;
+	}
 
-    // Getter para el campo 'id' (no se proporciona el Setter ya que 'id' se asigna en el constructor y parece ser inmutable)
-    public int getId() {
-        return id;
-    }
-    
-    public abstract void mostrarDetalles();
+	// Asignar un nuevo género.
+	public void setGenero(String genero) {
+		this.genero = genero;
+	}
 }

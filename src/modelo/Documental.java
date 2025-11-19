@@ -1,45 +1,35 @@
-/**
- * Class Documental
- */
 package modelo;
 
-// Subclase Documental que extiende de ContenidoAudiovisual
+// Clase que hereda de ContenidoAudiovisual para modelar un documental específico
 public class Documental extends ContenidoAudiovisual {
-    private String tema;
-    private Investigador investigadorPrincipal; //Agregación: Un Documental tiene un Investigador principal
-    
-    public Documental(String titulo, int duracionEnMinutos, String genero, String tema, Investigador investigadorPrincipal) {
-        super(titulo, duracionEnMinutos, genero);
-        this.tema = tema;
-        this.investigadorPrincipal= investigadorPrincipal; //Asignar el objeto Investigador 
-    }
+	private String tema; // Declarar el tema central del documental
+	private Investigador investigadorPrincipal; // Relación de Agregación: almacenar el Investigador asociado al proyecto.
 
-    public String getTema() {
-        return tema;
-    }
+	// Constructor para inicializar un nuevo objeto Documental.
+	public Documental(String titulo, int duracionEnMinutos, String genero, String tema,
+			Investigador investigadorPrincipal) {
+		super(titulo, duracionEnMinutos, genero); // Llamar al constructor de la clase padre
+		this.tema = tema; // Asignar el tema.
+		this.investigadorPrincipal = investigadorPrincipal; // Establecer la referencia al objeto Investigador
+	}
 
-    public void setTema(String tema) {
-        this.tema = tema;
-    }
-    public Investigador getInvestigadorPrincipal() { //Nuevo get
-    	return investigadorPrincipal;
-    }
-    public void setInvestigadorPrincipal (Investigador investigadorPrincipal) {
-    	this.investigadorPrincipal= investigadorPrincipal;
-    }
-    
-    @Override
-    public void mostrarDetalles() {
-        System.out.println("Detalles del documental:");
-        System.out.println("ID: " + getId());
-        System.out.println("Título: " + getTitulo());
-        System.out.println("Duración en minutos: " + getDuracionEnMinutos());
-        System.out.println("Género: " + getGenero());
-        System.out.println("Tema: " + this.tema);
-        //Mostar detalles del investigador
-        if (investigadorPrincipal != null) {
-        	System.out.println(investigadorPrincipal.toString());
-        }
-        System.out.println();
-    }
+	// Obtener el tema del documental
+	public String getTema() {
+		return tema;
+	}
+
+	// Asignar un nuevo tema.
+	public void setTema(String tema) {
+		this.tema = tema;
+	}
+
+	// Obtener el objeto Investigador principal.
+	public Investigador getInvestigadorPrincipal() {
+		return investigadorPrincipal;
+	}
+
+	// Asignar un nuevo Investigador principal
+	public void setInvestigadorPrincipal(Investigador investigadorPrincipal) {
+		this.investigadorPrincipal = investigadorPrincipal;
+	}
 }
