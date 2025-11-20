@@ -6,7 +6,8 @@ import java.util.List;
 public class GestorContenido {
 
     private List<ContenidoAudiovisual> contenidos;
-    private IRepositorioContenido repositorio; // Depende de la abstracción (DIP)
+    // Dependencia de la abstracción (DIP)
+    private IRepositorioContenido repositorio; 
 
     // Constructor que recibe la dependencia del repositorio (Inyección de Dependencia)
     public GestorContenido(IRepositorioContenido repositorio) {
@@ -31,19 +32,37 @@ public class GestorContenido {
         }
     }
 
-  
-    // METODOS DE MANIPULACIÓN DE LA LISTA
+    
+    // MÉTODOS DE MANIPULACIÓN Y CONSULTA DE LA LISTA (Usados por el Controlador y Tests)
 
+    // Retorna una lista de todos los contenidos en el catálogo.
     public List<ContenidoAudiovisual> obtenerTodosLosContenidos() {
         return contenidos;
     }
 
-    public void agregarContenido(ContenidoAudiovisual contenido) {
-        if (contenido != null) {
-            this.contenidos.add(contenido);
+    // Retorna el ID que debe asignarse al siguiente contenido disponible.
+    public int getSiguienteIdDisponible() {
+        int maxId = 0;
+        for (ContenidoAudiovisual c : contenidos) {
+            if (c.getId() > maxId) {
+                maxId = c.getId();
+            }
         }
+        return maxId + 1;
+    }
+    
+    // Agrega un nuevo contenido al catálogo.
+    public boolean agregarContenido(ContenidoAudiovisual contenido) {
+        if (contenido != null) {
+            // Asigna el ID usando el setter de ContenidoAudiovisual
+            contenido.setId(getSiguienteIdDisponible()); 
+            this.contenidos.add(contenido);
+            return true;
+        }
+        return false;
     }
 
+    // Busca un contenido por su ID.
     public ContenidoAudiovisual buscarContenidoPorId(int id) {
         for (ContenidoAudiovisual c : contenidos) {
             if (c.getId() == id) {
@@ -53,10 +72,34 @@ public class GestorContenido {
         return null;
     }
 
-   
-    // LÓGICA DE PERSISTENCIA (DELEGACIÓN AL REPOSITORIO)
-   
+    // Busca contenidos por título (búsqueda parcial e insensible a mayúsculas).
+    public List<ContenidoAudiovisual> buscarContenido(String tituloBusqueda) {
+        List<ContenidoAudiovisual> resultados = new ArrayList<>();
+        // Normaliza la búsqueda
+        String busquedaNormalizada = tituloBusqueda.trim().toLowerCase(); 
+        
+        for (ContenidoAudiovisual c : this.contenidos) {
+            if (c.getTitulo().toLowerCase().contains(busquedaNormalizada)) {
+                resultados.add(c);
+            }
+        }
+        return resultados;
+    }
 
+    // Elimina un contenido por su ID.
+    public boolean eliminarContenido(int id) {
+        ContenidoAudiovisual contenidoAEliminar = buscarContenidoPorId(id);
+        
+        if (contenidoAEliminar != null) {
+            this.contenidos.remove(contenidoAEliminar);
+            return true;
+        }
+        return false;
+    }
+    
+    
+    // LÓGICA DE PERSISTENCIA (DELEGACIÓN AL REPOSITORIO)
+    
     // Delega la operación de guardado al repositorio inyectado.
     public boolean guardar() {
         return repositorio.guardarContenidos(this.contenidos);
@@ -73,15 +116,17 @@ public class GestorContenido {
         return false;
     }
     
-
+    
     // DATOS DE PRUEBA
     
     private void inicializarDatosDummy() {
+        // Inicializa actores, investigadores y otros
         Actor actorPrincipalPelicula = new Actor("Tom Hanks", "Protagonista");
         Actor actorPrincipalAnuncio = new Actor("Ana de Armas", "Modelo principal");
-        Investigador invDoc = new Investigador("Jane Goodall", "Investigadora Primates"); 
+        Investigador invDoc = new Investigador("Jane Goodall", "Investigadora Primates");    
         Actor actorVideoMusical = new Actor("Dwayne Johnson", "Invitado Especial");
 
+        // Crea y agrega contenidos. El método agregarContenido asigna el ID.
         Pelicula p1 = new Pelicula("Forrest Gump", 142, "Drama", "Paramount Pictures", actorPrincipalPelicula);
         agregarContenido(p1);
 

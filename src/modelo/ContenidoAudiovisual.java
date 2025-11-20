@@ -2,22 +2,23 @@ package modelo;
 
 // Clase abstracta base para todos los contenidos (Películas, Series, Documentales, etc.).
 public abstract class ContenidoAudiovisual {
-	private static int contar = 0; // Contador estático para generar IDs unicos
-	protected int id; // Identificador único del contenido. Usé 'protected' para acceso en subclases
-	private String titulo; // Título del contenido.
-	private int duracionEnMinutos; // Duración del contenido
-	private String genero; // Género cinematográfico del contenido
+	
+	// El ID no se genera aquí, lo asigna el GestorContenido (SRP).
+	protected int id; 
+	private String titulo; 
+	private int duracionEnMinutos; 
+	private String genero; 
 
 	// Constructor para inicializar los atributos de un Contenido Audiovisual.
 	public ContenidoAudiovisual(String titulo, int duracionEnMinutos, String genero) {
-		this.id = ++contar; // Incrementar el contador estático y asignar el nuevo valor como id
+		// Se inicializa el ID a 0. Será asignado por GestorContenido.
+		this.id = 0; 
 		this.titulo = titulo;
 		this.duracionEnMinutos = duracionEnMinutos;
 		this.genero = genero;
 	}
     
-    // metodo abstracto añadido (obliga a subclases a definir sus propios detalles). 
-	//Esto asegura que la clase VistaTerminal no necesite cambiar cuando se añade un nuevo tipo de contenido (OCP).
+    // Método abstracto (OCP) para detalles específicos (película vs serie vs documental). 
     public abstract String getDetallesEspecificos(); 
 
 
@@ -26,6 +27,11 @@ public abstract class ContenidoAudiovisual {
 		return id;
 	}
 
+	// Establecer el ID (Usado por el GestorContenido y Persistencia).
+	public void setId(int id) {
+	    this.id = id;
+	}
+	
 	// Obtener el título
 	public String getTitulo() {
 		return titulo;
@@ -54,5 +60,14 @@ public abstract class ContenidoAudiovisual {
 	// Asignar un nuevo género.
 	public void setGenero(String genero) {
 		this.genero = genero;
+	}
+	
+	// Sobreescritura de toString para mostrar los datos comunes.
+	@Override
+	public String toString() {
+	    return "ID: " + id + 
+	           " | Título: " + titulo + 
+	           " | Duración: " + duracionEnMinutos + " min" + 
+	           " | Género: " + genero;
 	}
 }
