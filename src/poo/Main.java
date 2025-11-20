@@ -22,6 +22,6 @@ public class Main {
 
         // 5. Inicia la aplicación
         System.out.println("Sistema de Contenido Audiovisual iniciado.");
-        controlador.iniciar(); 
+        controlador.iniciar();
     }
 }

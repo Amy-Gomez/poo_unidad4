@@ -17,7 +17,6 @@ public class Controlador {
 
     public void iniciar() {
         while (ejecutando) {
-            // Usamos el método que SÍ existe en VistaTerminal
             int opcion = vista.mostrarMenu();
             manejarOpcion(opcion);
         }
@@ -26,19 +25,18 @@ public class Controlador {
     private void manejarOpcion(int opcion) {
         switch (opcion) {
             case 1:
-                // Mostrar catálogo completo
                 vista.mostrarListado(modelo.obtenerTodosLosContenidos());
                 break;
             case 2:
-                // Buscar contenido
                 String titulo = vista.solicitarTituloBusqueda();
                 vista.mostrarListado(modelo.buscarContenido(titulo));
                 break;
             case 3:
-                vista.mostrarMensaje("Función de añadir no implementada en esta demo.");
+                // --- Opción DEMO / No interactiva ---
+                vista.mostrarMensaje("Función de añadir contenido aún en desarrollo. ¡Usa el botón 4 para guardar!");
                 break;
             case 4:
-                // Guardar y Salir
+                // Guardar y Salir (Opción 4 en este menú)
                 if (modelo.guardar()) {
                     vista.mostrarMensaje("Datos guardados correctamente.");
                 } else {
@@ -47,7 +45,7 @@ public class Controlador {
                 ejecutando = false;
                 break;
             case 0:
-                vista.mostrarMensaje("Saliendo...");
+                vista.mostrarMensaje("Saliendo sin guardar...");
                 ejecutando = false;
                 break;
             default:
