@@ -7,12 +7,31 @@ import java.util.List;
 public class SerieDeTV extends ContenidoAudiovisual {
 	private List<Temporada> temporadas; // Declarar una lista para almacenar objetos Temporada
 
-	// Constructor para inicializar una nueva Serie de TV
-	public SerieDeTV(String titulo, int duracionEnMinutos, String genero) {
-		super(titulo, duracionEnMinutos, genero); // Llamar al constructor de la clase padre.
-		this.temporadas = new ArrayList<>(); // Inicializar la lista de temporadas al crear la serie
+	// 1. CONSTRUCTOR CON ID (Para el PARSER CSV / Carga)
+	public SerieDeTV(int id, String titulo, int duracionEnMinutos, String genero) {
+	    
+	    // Llama al constructor base sin ID
+	    super(titulo, duracionEnMinutos, genero); 
+	    
+	    // Asigna el ID cargado del archivo
+	    this.setId(id);
+	    
+	    // Inicializa la lista de temporadas (vacía o con datos cargados si los pasas)
+	    this.temporadas = new ArrayList<>(); 
 	}
 
+	// 2. CONSTRUCTOR SIN ID (Para el CONTROLADOR / Nuevos objetos)
+	public SerieDeTV(String titulo, int duracionEnMinutos, String genero) {
+	    
+	    // Llama al constructor base sin ID
+	    super(titulo, duracionEnMinutos, genero); 
+	    
+	    // Inicializa la lista de temporadas
+	    this.temporadas = new ArrayList<>(); 
+	    
+	    // El ID será asignado por GestorContenido.agregarContenido()
+	}
+	
 	// implementacion del metodo abstracto
 	@Override
 	public String getDetallesEspecificos() {

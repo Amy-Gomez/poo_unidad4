@@ -6,14 +6,37 @@ public class AnuncioPublicitario extends ContenidoAudiovisual {
 	private String agencia; // Declarar la agencia de publicidad que creó el anuncio.
 	private Actor protagonista; // Relación de Agregación: almacenar el Actor principal del anuncio.
 
-	// Constructor para inicializar un nuevo objeto AnuncioPublicitario.
-	public AnuncioPublicitario(String titulo, int duracionEnMinutos, String genero, String marca, String agencia,
-			Actor protagonista) {
-		super(titulo, duracionEnMinutos, genero); // Llamar al constructor de la clase padre (ContenidoAudiovisual).
-		this.marca = marca; // Asignar la marca.
-		this.agencia = agencia; // Asignar la agencia
-		this.protagonista = protagonista; // Establecer la referencia al objeto Actor
+	// 1. CONSTRUCTOR CON ID (Para el PARSER CSV / Carga) - (EL QUE YA TENÍAS)
+	public AnuncioPublicitario(int id, String titulo, int duracionEnMinutos, String genero, 
+	                           String marca, String agencia, Actor protagonista) {
+	    
+	    // Llama al constructor base sin ID
+	    super(titulo, duracionEnMinutos, genero); 
+	    
+	    // Asigna el ID cargado del archivo
+	    this.setId(id);
+	    
+	    // Inicializa atributos específicos
+	    this.marca = marca;
+	    this.agencia = agencia;
+	    this.protagonista = protagonista;
 	}
+
+	// 2. CONSTRUCTOR SIN ID (Para el CONTROLADOR / Nuevos objetos) - (EL QUE NECESITAMOS AÑADIR)
+	public AnuncioPublicitario(String titulo, int duracionEnMinutos, String genero, 
+	                           String marca, String agencia, Actor protagonista) {
+	    
+	    // Llama al constructor base sin ID
+	    super(titulo, duracionEnMinutos, genero); 
+	    
+	    // Inicializa atributos específicos
+	    this.marca = marca;
+	    this.agencia = agencia;
+	    this.protagonista = protagonista;
+	    
+	    // El ID se quedará en 0 y será asignado por GestorContenido.agregarContenido()
+	}
+	
 
     // implementacion del metodo abstracto (Detalles para Anuncio Publicitario)
     @Override

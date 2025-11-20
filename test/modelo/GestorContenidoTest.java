@@ -38,14 +38,16 @@ public class GestorContenidoTest {
     // Prueba la generación de IDs para nuevos contenidos.
     @Test
     void testGeneracionId() {
-        // Asumiendo que existe un método para obtener el siguiente ID disponible
+        // 1. Usa el constructor original sin ID.
+        Pelicula nuevaPelicula = new Pelicula("Test Pelicula", 90, "Drama", "Estudio", new Actor("A", "P")); 
+        
+        // Obtiene el ID disponible ANTES de agregarlo.
         int idInicial = gestor.getSiguienteIdDisponible();
         
-        Pelicula nuevaPelicula = new Pelicula("Test Pelicula", 90, "Drama", "Estudio", new Actor("A", "P"));
         gestor.agregarContenido(nuevaPelicula);
         
         assertEquals(idInicial, nuevaPelicula.getId(), "El ID asignado debe ser el ID inicial esperado.");
-        // Asumiendo que el ID se incrementa después de agregar
+        // Comprueba que el contador estático haya avanzado.
         assertEquals(idInicial + 1, gestor.getSiguienteIdDisponible(), "El siguiente ID disponible debe incrementarse.");
     }
 

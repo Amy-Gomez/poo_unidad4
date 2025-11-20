@@ -9,10 +9,14 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+// Implementación concreta de la interfaz IRepositorioContenido.
+// Gestiona la persistencia de los objetos ContenidoAudiovisual en un archivo CSV.
 public class GestorArchivoCSV implements IRepositorioContenido {
 
     private static final String NOMBRE_ARCHIVO = "contenidos.csv";
     private static final String SEPARADOR = "|"; 
+
+    // --- CARGA DE CONTENIDOS ---
 
     @Override
     public List<ContenidoAudiovisual> cargarContenidos() {
@@ -43,26 +47,39 @@ public class GestorArchivoCSV implements IRepositorioContenido {
         }
     }
     
+    // Procesa una línea del CSV y crea el objeto ContenidoAudiovisual correspondiente.
     private ContenidoAudiovisual parsearLinea(String linea) {
         String[] partes = linea.split("\\" + SEPARADOR);
         
-        // El CSV tiene: TIPO|ID|TITULO|DURACION|GENERO|DETALLES... 
+        // Estructura esperada: TIPO|ID|TITULO|DURACION|GENERO|DETALLES... 
         if (partes.length < 5) return null; 
-
+        
         String tipo = partes[0];
+        int id = 0;
+        try {
+            // CRÍTICO: Leer el ID de la segunda columna (índice 1).
+            id = Integer.parseInt(partes[1].trim()); 
+        } catch (NumberFormatException e) {
+            System.err.println("Error al parsear ID: " + partes[1] + ". Usando ID 0.");
+            return null;
+        }
+        
+        // El resto de campos se leen a partir del índice 2.
         String titulo = partes[2];
         int duracion = Integer.parseInt(partes[3].trim());
         String genero = partes[4];
-
+        
         try {
             switch (tipo) {
                 case "PELICULA":
                     String estudioP = partes[5];
                     Actor actorP = new Actor(partes[6], "Protagonista"); 
-                    return new Pelicula(titulo, duracion, genero, estudioP, actorP);
+                    // Usar constructor CON ID
+                    return new Pelicula(id, titulo, duracion, genero, estudioP, actorP);
 
                 case "SERIE":
-                    SerieDeTV serie = new SerieDeTV(titulo, duracion, genero);
+                    // Usar constructor CON ID
+                    SerieDeTV serie = new SerieDeTV(id, titulo, duracion, genero);
                     String[] temporadasData = partes[5].split(";");
                     for (String tData : temporadasData) {
                         if (!tData.isEmpty()) {
@@ -76,19 +93,22 @@ public class GestorArchivoCSV implements IRepositorioContenido {
                 case "DOCUMENTAL":
                     String temaD = partes[5];
                     Investigador invD = new Investigador(partes[6], "Especialista"); 
-                    return new Documental(titulo, duracion, genero, temaD, invD);
+                    // Usar constructor CON ID
+                    return new Documental(id, titulo, duracion, genero, temaD, invD);
                     
                 case "VIDEO":
                     String artistaV = partes[5];
                     String albumV = partes[6];
                     Actor actorV = new Actor(partes[7], "Invitado"); 
-                    return new VideoMusical(titulo, duracion, genero, artistaV, albumV, actorV);
+                    // Usar constructor CON ID
+                    return new VideoMusical(id, titulo, duracion, genero, artistaV, albumV, actorV);
                     
                 case "ANUNCIO":
                     String marcaA = partes[5];
                     String agenciaA = partes[6];
                     Actor actorA = new Actor(partes[7], "Protagonista"); 
-                    return new AnuncioPublicitario(titulo, duracion, genero, marcaA, agenciaA, actorA);
+                    // Usar constructor CON ID
+                    return new AnuncioPublicitario(id, titulo, duracion, genero, marcaA, agenciaA, actorA);
 
                 default:
                     System.err.println("Tipo de contenido desconocido: " + tipo);
@@ -100,6 +120,8 @@ public class GestorArchivoCSV implements IRepositorioContenido {
         }
     }
     
+    // --- GUARDADO DE CONTENIDOS ---
+
     @Override
     public boolean guardarContenidos(List<ContenidoAudiovisual> contenidos) {
         System.out.println(">> REPOSITORIO CSV: Guardando " + contenidos.size() + " contenidos a " + NOMBRE_ARCHIVO + "...");
@@ -121,13 +143,18 @@ public class GestorArchivoCSV implements IRepositorioContenido {
         }
     }
     
+    // Convierte un objeto ContenidoAudiovisual a una línea de texto CSV.
     private String formatearACSV(ContenidoAudiovisual c) {
-        // En la escritura, el ID sí es necesario para mantener la consistencia en el archivo.
-        String base = c.getId() + SEPARADOR + c.getTitulo() + SEPARADOR + c.getDuracionEnMinutos() + SEPARADOR + c.getGenero();
+        // Campos comunes después del ID: TITULO | DURACION | GENERO
+        String camposComunes = c.getTitulo() + SEPARADOR + c.getDuracionEnMinutos() + SEPARADOR + c.getGenero();
+        
+        // PREFIJO: TIPO | ID | TITULO | DURACION | GENERO
+        // CORRECCIÓN CLAVE: El ID debe ir primero, seguido de los campos comunes.
+        String prefijo = c.getId() + SEPARADOR + camposComunes;
         
         if (c instanceof Pelicula) {
             Pelicula p = (Pelicula) c;
-            return "PELICULA" + SEPARADOR + base + SEPARADOR + p.getEstudio() + SEPARADOR + p.getActorPrincipal().getNombre();
+            return "PELICULA" + SEPARADOR + prefijo + SEPARADOR + p.getEstudio() + SEPARADOR + p.getActorPrincipal().getNombre();
             
         } else if (c instanceof SerieDeTV) {
             SerieDeTV s = (SerieDeTV) c;
@@ -136,24 +163,24 @@ public class GestorArchivoCSV implements IRepositorioContenido {
                 temporadasCSV.append("T").append(t.getNumeroTemporada()).append(":E").append(t.getNumeroEpisodios()).append(";");
             }
             String tempString = temporadasCSV.length() > 0 ? temporadasCSV.substring(0, temporadasCSV.length() - 1) : "";
-            return "SERIE" + SEPARADOR + base + SEPARADOR + tempString;
+            return "SERIE" + SEPARADOR + prefijo + SEPARADOR + tempString;
 
         } else if (c instanceof Documental) {
             Documental d = (Documental) c;
             String nombreInvestigador = (d.getInvestigadorPrincipal() != null) ? d.getInvestigadorPrincipal().getNombre() : "N/A";
-            return "DOCUMENTAL" + SEPARADOR + base + SEPARADOR + d.getTema() + SEPARADOR + nombreInvestigador;
+            return "DOCUMENTAL" + SEPARADOR + prefijo + SEPARADOR + d.getTema() + SEPARADOR + nombreInvestigador;
             
         } else if (c instanceof VideoMusical) {
             VideoMusical v = (VideoMusical) c;
             String nombreActor = (v.getActorInvitado() != null) ? v.getActorInvitado().getNombre() : "N/A";
-            return "VIDEO" + SEPARADOR + base + SEPARADOR + v.getArtista() + SEPARADOR + v.getAlbum() + SEPARADOR + nombreActor;
+            return "VIDEO" + SEPARADOR + prefijo + SEPARADOR + v.getArtista() + SEPARADOR + v.getAlbum() + SEPARADOR + nombreActor;
             
         } else if (c instanceof AnuncioPublicitario) {
             AnuncioPublicitario a = (AnuncioPublicitario) c;
             String nombreProtagonista = (a.getProtagonista() != null) ? a.getProtagonista().getNombre() : "N/A";
-            return "ANUNCIO" + SEPARADOR + base + SEPARADOR + a.getMarca() + SEPARADOR + a.getAgencia() + SEPARADOR + nombreProtagonista;
+            return "ANUNCIO" + SEPARADOR + prefijo + SEPARADOR + a.getMarca() + SEPARADOR + a.getAgencia() + SEPARADOR + nombreProtagonista;
         }
         
-        return "DESCONOCIDO" + SEPARADOR + base;
+        return "DESCONOCIDO" + SEPARADOR + prefijo;
     }
 }

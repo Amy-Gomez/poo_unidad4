@@ -1,5 +1,5 @@
 package controlador;
-
+import modelo.*;
 import modelo.GestorContenido;
 import vista.VistaTerminal;
 
@@ -21,7 +21,6 @@ public class Controlador {
             manejarOpcion(opcion);
         }
     }
-
     private void manejarOpcion(int opcion) {
         switch (opcion) {
             case 1:
@@ -32,11 +31,38 @@ public class Controlador {
                 vista.mostrarListado(modelo.buscarContenido(titulo));
                 break;
             case 3:
-                // --- Opción DEMO / No interactiva ---
-                vista.mostrarMensaje("Función de añadir contenido aún en desarrollo. ¡Usa el botón 4 para guardar!");
+                // --- Lógica para AÑADIR CONTENIDO ---
+                String tipo = vista.solicitarTipoContenido();
+                String t = vista.solicitarDato("el Título");
+                int d = vista.solicitarEntero("la Duración en minutos");
+                String g = vista.solicitarDato("el Género");
+                
+                if (tipo.equals("PELICULA")) {
+                    // Datos específicos de Película
+                    String estudio = vista.solicitarDato("el Estudio");
+                    String nombreActor = vista.solicitarDato("el nombre del Actor Principal");
+                    
+                    // Se crean las dependencias y el objeto
+                    Actor actorP = new Actor(nombreActor, "Protagonista"); 
+                    Pelicula nuevaPelicula = new Pelicula(t, d, g, estudio, actorP);
+                    
+                    modelo.agregarContenido(nuevaPelicula);
+                    vista.mostrarMensaje(" Película '" + t + "' (ID: " + nuevaPelicula.getId() + ") añadida con éxito :)");
+                } else {
+                    vista.mostrarMensaje("Tipo de contenido '" + tipo + "' no implementado aún. Añade la lógica aquí.");
+                }
                 break;
             case 4:
-                // Guardar y Salir (Opción 4 en este menú)
+                // --- Lógica para ELIMINAR CONTENIDO ---
+                int idAEliminar = vista.solicitarId("eliminar");
+                if (modelo.eliminarContenido(idAEliminar)) {
+                    vista.mostrarMensaje("Contenido con ID " + idAEliminar + " eliminado correctamente.");
+                } else {
+                    vista.mostrarMensaje("Error: No se encontró contenido con el ID " + idAEliminar + ".");
+                }
+                break;
+            case 5:
+                // Guardar y Salir (Opción 5 en el nuevo menú)
                 if (modelo.guardar()) {
                     vista.mostrarMensaje("Datos guardados correctamente.");
                 } else {

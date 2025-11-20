@@ -5,12 +5,32 @@ public class Documental extends ContenidoAudiovisual {
 	private String tema; // Declarar el tema central del documental
 	private Investigador investigadorPrincipal; // Relación de Agregación: almacenar el Investigador asociado al proyecto
 
-	// Constructor para inicializar un nuevo objeto Documental
-	public Documental(String titulo, int duracionEnMinutos, String genero, String tema,
-			Investigador investigadorPrincipal) {
-		super(titulo, duracionEnMinutos, genero); // Llamar al constructor de la clase padre
-		this.tema = tema; // Asignar el tema.
-		this.investigadorPrincipal = investigadorPrincipal; // Establecer la referencia al objeto Investigador
+	// 1. CONSTRUCTOR CON ID (Para el PARSER CSV / Carga)
+	public Documental(int id, String titulo, int duracionEnMinutos, String genero, 
+	                  String tema, Investigador investigadorPrincipal) {
+	    
+	    // Llama al constructor base sin ID
+	    super(titulo, duracionEnMinutos, genero); 
+	    
+	    // Asigna el ID cargado del archivo
+	    this.setId(id);
+	    
+	    // Inicializa atributos específicos
+	    this.tema = tema;
+	    this.investigadorPrincipal = investigadorPrincipal;
+	}
+
+	// 2. CONSTRUCTOR SIN ID (Para el CONTROLADOR / Nuevos objetos)
+	public Documental(String titulo, int duracionEnMinutos, String genero, 
+	                  String tema, Investigador investigadorPrincipal) {
+	    
+	    // Llama al constructor base sin ID
+	    super(titulo, duracionEnMinutos, genero); 
+	    
+	    // Inicializa atributos específicos
+	    this.tema = tema;
+	    this.investigadorPrincipal = investigadorPrincipal;
+	    // El ID será asignado por GestorContenido.agregarContenido()
 	}
 
     // IMPLEMENTACIÓN DEL MÉTODO ABSTRACTO (Detalles para Documental)

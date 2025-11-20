@@ -8,13 +8,35 @@ public class VideoMusical extends ContenidoAudiovisual {
 	// Relación de Agregación con la clase existente Actor
 	private Actor actorInvitado;
 
-	public VideoMusical(String titulo, int duracionEnMinutos, String genero, String artista, String album,
-			Actor actorInvitado) {
+	public VideoMusical(int id, String titulo, int duracionEnMinutos, String genero, 
+            String artista, String album, Actor actorInvitado) {
+
+		// Llama al constructor base sin ID
 		super(titulo, duracionEnMinutos, genero);
+
+		// Asigna el ID cargado del archivo
+		this.setId(id);
+
+		// Inicializa atributos específicos
 		this.artista = artista;
 		this.album = album;
-		this.actorInvitado = actorInvitado; // Se establece la relación
-	}
+		this.actorInvitado = actorInvitado; 
+}
+
+	//2. CONSTRUCTOR SIN ID (Para el CONTROLADOR / Nuevos objetos) - (EL QUE NECESITAMOS AÑADIR)
+	public VideoMusical(String titulo, int duracionEnMinutos, String genero, 
+            String artista, String album, Actor actorInvitado) {
+
+		// Llama al constructor base sin ID
+		super(titulo, duracionEnMinutos, genero);
+
+		// Inicializa atributos específicos
+		this.artista = artista;
+		this.album = album;
+		this.actorInvitado = actorInvitado;
+
+// El ID se queda en 0 y será asignado por GestorContenido.agregarContenido()
+}
 
     // implementacion del metodo abstracto (Detalles para Video Musical)
     @Override
