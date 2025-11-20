@@ -2,11 +2,9 @@ package controlador;
 
 import modelo.GestorContenido;
 import vista.VistaTerminal;
-import java.util.List;
-import modelo.ContenidoAudiovisual;
 
 public class Controlador {
-    
+
     private GestorContenido modelo;
     private VistaTerminal vista;
     private boolean ejecutando;
@@ -17,8 +15,9 @@ public class Controlador {
         this.ejecutando = true;
     }
 
-    public void ejecutar() {
+    public void iniciar() {
         while (ejecutando) {
+            // Usamos el método que SÍ existe en VistaTerminal
             int opcion = vista.mostrarMenu();
             manejarOpcion(opcion);
         }
@@ -27,47 +26,32 @@ public class Controlador {
     private void manejarOpcion(int opcion) {
         switch (opcion) {
             case 1:
-                mostrarContenidos();
+                // Mostrar catálogo completo
+                vista.mostrarListado(modelo.obtenerTodosLosContenidos());
                 break;
             case 2:
-                guardarDatos();
+                // Buscar contenido
+                String titulo = vista.solicitarTituloBusqueda();
+                vista.mostrarListado(modelo.buscarContenido(titulo));
                 break;
             case 3:
-                cargarDatos();
+                vista.mostrarMensaje("Función de añadir no implementada en esta demo.");
+                break;
+            case 4:
+                // Guardar y Salir
+                if (modelo.guardar()) {
+                    vista.mostrarMensaje("Datos guardados correctamente.");
+                } else {
+                    vista.mostrarMensaje("Error al guardar.");
+                }
+                ejecutando = false;
                 break;
             case 0:
-                salir();
+                vista.mostrarMensaje("Saliendo...");
+                ejecutando = false;
                 break;
             default:
-                vista.mostrarMensaje("Opción no válida. Intente de nuevo.");
+                vista.mostrarMensaje("Opción no válida.");
         }
-    }
-
-    private void mostrarContenidos() {
-        List<ContenidoAudiovisual> contenidos = modelo.obtenerTodosLosContenidos();
-        vista.mostrarListado(contenidos);
-    }
-
-    private void guardarDatos() {
-        // Llama al nuevo método "guardar" del GestorContenido
-        if (modelo.guardar()) {
-            vista.mostrarMensaje("Datos guardados correctamente. (REPOSITORIO CSV PENDIENTE).");
-        } else {
-            vista.mostrarMensaje("Error al intentar guardar los datos.");
-        }
-    }
-
-    private void cargarDatos() {
-        // Llama al nuevo método "cargar" del GestorContenido
-        if (modelo.cargar()) {
-            vista.mostrarMensaje("Datos cargados correctamente. (REPOSITORIO CSV PENDIENTE).");
-        } else {
-            vista.mostrarMensaje("Error al intentar cargar los datos.");
-        }
-    }
-
-    private void salir() {
-        ejecutando = false;
-        vista.mostrarMensaje("Saliendo del sistema. ¡Hasta pronto!");
     }
 }

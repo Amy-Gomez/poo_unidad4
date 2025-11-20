@@ -35,7 +35,7 @@ public class GestorArchivoCSV implements IRepositorioContenido {
             return contenidosCargados;
             
         } catch (IOException e) {
-            System.err.println(">> REPOSITORIO CSV ERROR: Archivo no encontrado o error de lectura. Inicializará con datos dummy.");
+            System.err.println(">> REPOSITORIO CSV ERROR: Archivo no encontrado o error de lectura. Inicializará con datos de prueba.");
             return new ArrayList<>(); 
         } catch (Exception e) {
              System.err.println(">> REPOSITORIO CSV ERROR: Error al parsear una línea: " + e.getMessage());

@@ -1,50 +1,28 @@
 package poo;
-import modelo.*;
+
+import controlador.Controlador;
+import modelo.GestorContenido;
+import util.GestorArchivoCSV;
+import vista.VistaTerminal;
 
 public class PruebaAudioVisual {
-	public static void main(String[] args) {
-        System.out.println("--- PRUEBA DE POLIMORFISMO Y OCP ---");
 
-        // 1. Crear instancias de las clases de relación (Actor, Temporada, Investigador)
-        Actor actorPelicula = new Actor("Sam Worthington", "Jake Sully");
-        Temporada temporada1 = new Temporada(1, 10);
-        Temporada temporada8 = new Temporada(8, 6);
-        Investigador investigadorDocumental = new Investigador("Neil deGrasse Tyson", "Astrofísica");
+    public static void main(String[] args) {
+        System.out.println("--- INICIANDO SISTEMA (MVC) ---");
         
-        // Actores para las nuevas clases
-        Actor actorVideo = new Actor("Christopher Walken", "Bailarín");
-        Actor actorAnuncio = new Actor("Ryan Reynolds", "Portavoz");
-
-
-        // 2. Crear instancias de TODAS las subclases
-        ContenidoAudiovisual[] contenidos = new ContenidoAudiovisual[5];
+        // 1. Repositorio
+        GestorArchivoCSV repositorio = new GestorArchivoCSV();
         
-        // Clases Originales
-        contenidos[0] = new Pelicula("Avatar", 125, "Accion", "20th Century Studios", actorPelicula);
+        // 2. Modelo
+        GestorContenido modelo = new GestorContenido(repositorio);
         
-        SerieDeTV got = new SerieDeTV("Game of Thrones", 60, "Fantasy");
-        got.agregarTemporada(temporada1);
-        got.agregarTemporada(temporada8);
-        contenidos[1] = got;
+        // 3. Vista
+        VistaTerminal vista = new VistaTerminal();
         
-        contenidos[2] = new Documental("Cosmos", 45, "Science", "Astronomy", investigadorDocumental);
+        // 4. Controlador
+        Controlador controlador = new Controlador(modelo, vista);
         
-        // NUEVAS subclases
-        contenidos[3] = new VideoMusical("Weapon of Choice", 4, "Big Beat", "Fatboy Slim", "Halfway Between the Gutter and the Stars", actorVideo);
-        contenidos[4] = new AnuncioPublicitario("El Mejor Anuncio", 1, "Comedia", "Mint Mobile", "Agencia Creativa", actorAnuncio);
-        
-
-        // Mostrar los detalles de CADA contenido audiovisual
-        // El bucle ahora llama al método getDetallesEspecificos(), demostrando el polimorfismo.
-        for (ContenidoAudiovisual contenido : contenidos) {
-            
-            // Se imprimen los detalles comunes y luego los detalles específicos
-            String detallesComunes = "ID: " + contenido.getId() + " | Título: " + contenido.getTitulo() + " | Duración: " + contenido.getDuracionEnMinutos() + " min | Género: " + contenido.getGenero();
-            
-            System.out.println("------------------------------------------------");
-            System.out.println(detallesComunes);
-            System.out.println("Detalles específicos: " + contenido.getDetallesEspecificos());
-        }
-        System.out.println("------------------------------------------------");
+        // 5. Ejecutar
+        controlador.iniciar(); 
     }
 }
