@@ -1,67 +1,98 @@
-# <p align="center" style="color:#8c0051;"> Modelado de Contenido Audiovisual (POO Java)</p>
+# <p align="center" style="color:#8c0051;"> Finalización del sistema de Contenido Audiovisual </p>
 
 ---
 
 ## <p style="color:#a64d79;">📝 Descripción del Proyecto</p>
 
-Este proyecto consiste en una aplicación desarrollada en &nbsp;<img width= "50" src= "https://1000marcas.net/wp-content/uploads/2020/11/Java-logo.png"> cuyo objetivo primordial es la demostración y aplicación práctica de los pilares fundamentales de la Programación Orientada a Objetos (POO).
+Este proyecto consiste en una aplicación desarrollada en &nbsp;<img width= "50" src= "https://1000marcas.net/wp-content/uploads/2020/11/Java-logo.png">diseñada para demostrar la aplicación práctica de la Programación Orientada a Objetos (POO), Patrones de Diseño y Principios SOLID.
 
-Se implementa un modelo de datos que ilustra con claridad conceptos como:
-* Herencia
-* Polimorfismo
-* Las diversas relaciones entre clases (Asociación, Agregación y Composición).
+El sistema permite gestionar un catálogo multimedia (Películas, Series, Documentales, Videos Musicales y Anuncios), implementando persistencia de datos mediante archivos y una arquitectura desacoplada.
 
+**Características principales:**
+* **Persistencia de Datos:** Lectura y escritura automática en archivos CSV.
+* **Arquitectura MVC:** Separación estricta entre Modelo, Vista y Controlador.
+* **Gestión de IDs:** Generación automática de identificadores y sincronización con la persistencia.
+* **Búsquedas:** Filtrado de contenidos por título.
+  
 ---
-
-## <p style="color:#a64d79;"> Objetivos y Propósito</p>
-
-### <p style="color:#b45f06;">Objetivo:</p>
-Crear una jerarquía de clases robusta y extensible para manejar diversos tipos de contenidos audiovisuales (películas, series, documentales, etc.) de manera coherente.
-<p align= "center"><img align="center" width="300" src="https://www.elpublicista.es/adjuntos/fichero_18406_20181113.jpg"></pr>
-
-### <p style="color:#b45f06;">Propósito:</p>
-La aplicación sirve como un ejercicio formativo esencial para la implementación y comprensión de los siguientes conceptos avanzados:
-
-* Clases abstractas.
-* Implementación de la Herencia para la especialización de tipos de contenido.
-* Uso del Polimorfismo para manejar objetos de distintas clases de manera uniforme.
-* Modelado de relaciones complejas entre objetos, con énfasis en la Agregación a través de clases auxiliares.
-
+## <p style="color:#a64d79;">📂 Estructura del Código (Arquitectura MVC)</p>
+El proyecto ha sido refactorizado para seguir el patrón **Modelo-Vista-Controlador**, como lo indica la **Etapa 4** organizado en los siguientes paquetes:
+```text
+src/
+├── controlador/
+│   └── Controlador.java       # Orquesta la comunicación entre la Vista y el Modelo.
+├── modelo/
+│   ├── ContenidoAudiovisual.java (Abstracta)
+│   ├── Pelicula.java
+│   ├── SerieDeTV.java
+│   ├── Documental.java
+│   ├── VideoMusical.java
+│   ├── AnuncioPublicitario.java
+│   ├── GestorContenido.java   # Lógica de negocio y gestión de la lista en memoria.
+│   ├── IRepositorioContenido.java # Interfaz para aplicar DIP (Inversión de Dependencias).
+│   └── (Clases auxiliares: Actor, Investigador, Temporada)
+├── vista/
+│   └── VistaTerminal.java     # Interfaz de usuario por consola (Scanner).
+├── util/
+│   └── GestorArchivoCSV.java  # Implementación concreta de lectura/escritura de archivos.
+├── poo/
+│   └── Main.java              # Punto de entrada (Inyección de dependencias).
+└── test/
+    └── modelo/
+        └── GestorContenidoTest.java # Pruebas Unitarias con JUnit 5.
+```
 ---
-## <p style="color:#a64d79;">⭐ Novedades y Mejoras Implementadas</p>
+## <p style="color:#a64d79;">⭐ Implementaciones y Mejoras Técnicas</p>
 
-### 1. Nuevas Clases y Extensión de la Jerarquía
-Se ha expandido la jerarquía principal de clases agregando nuevas especializaciones que heredan de `ContenidoAudiovisual`, promoviendo la extensibilidad del modelo y el uso avanzado del polimorfismo.
+### 1. Persistencia de Datos (Manejo de Archivos) [Etapa 1]
+Se implementó la clase GestorArchivoCSV en el paquete `util`.
 
-* **`VideoMusical`**: Subclase especializada en contenido musical. Añade atributos como el **artista** y el **álbum**.
-* **`AnuncioPublicitario`**: Subclase para spots comerciales. Incluye atributos de contexto como la **marca** y la **agencia** productora.
+* **Lectura**: Parsea el archivo `contenidos.csv` utilizando el separador `|`. Reconstruye objetos complejos (listas de temporadas, actores, investigadores) a partir de texto plano.
+* **Escritura**: Subclase para comerciales. Contiene atributos de contexto importantes, como la **marca** y la **agencia** productora.
 
-### 2. Implementación de Relaciones Avanzadas (Agregación)
+### 2. Principios SOLID [Etapa 3]
 Se han fortalecido las relaciones entre las clases mediante Agregación, conectando los nuevos contenidos con elementos ya existentes:
+* **SRP (Responsabilidad Única)**: La lógica de archivos se movió a `util`, la interacción con usuario a `vista` y el negocio a `modelo`.
+* **DIP (Inversión de Dependencia)**: El `GestorContenido` no depende directamente de la clase CSV, sino de la interfaz `IRepositorioContenido`. Esto hace que el sistema sea fácil de probar y extender.
 
-* Se agregó la clase auxiliar **`Actor`** a las nuevas subclases. `VideoMusical` ahora tiene un **Actor Invitado** y `AnuncioPublicitario` tiene un **Protagonista**.
-* Se completaron y actualizaron las clases **`Actor`**, **`Investigador`** y **`Temporada`**, que actúan como componentes clave de otras clases principales.
+### 3. Refactorización de IDs y Constructores [Etapa 2]
+Para solucionar conflictos al cargar datos guardados versus crear nuevos, se implementó una Doble Estrategia de Constructores:
+<ol>
+<li><b>Constructor con ID</b>: Usado por el parser CSV para respetar los IDs históricos.</li>
+<li><b>Constructor sin ID</b>: Usado por el Controlador para nuevos registros; el sistema asigna automáticamente el siguiente ID disponible (basado en un contador estático <code>siguienteID</code>).</li>
+</ol>
 
-### 3. Mejora de Código
-* Se implementó una **verificación de nulidad (`!= null`)** en los métodos `mostrarDetalles()` de las clases compuestas (`Pelicula`, `Documental`, `VideoMusical`, etc.). Esto asegura que el programa no falle (`NullPointerException`) al intentar acceder a los detalles de un objeto auxiliar que no ha sido inicializado.
+### 4. Nuevos Tipos de Contenido
+Se extendió la jerarquía con clases especializadas que usan Agregación:
+* `VideoMusical`: Incluye atributos de artista, álbum y un `Actor` invitado.
+* `AnuncioPublicitario`: Gestiona marcas, agencias y un `Actor` protagonista.
 
 ---
-## <p style="color:#a64d79;"> Configuración del Entorno</p>
+## <p style="color:#a64d79;">🚀 Clonación y Ejecución</p>
 
-### 1. Instalación de Git
+### 1. Establecer Conexión SSH
+Mis claves SSH ya estaban generadas, por lo que lo único que hice fue asegurarme de que mi agente SSH estuviera activo y la clave agregada para poder clonar sin problemas:
+<pre><code>
+# Iniciar el agente en segundo plano
+eval "$(ssh-agent -s)"
 
-Diríjase al sitio oficial de [Git](https://git-scm.com/install/windows) y proceda con la descarga. Ejecute el archivo y siga las indicaciones predeterminadas ("Siguiente") hasta completar la instalación.
+# Agregar tu clave privada (si no está agregada ya)
+ssh-add ~/.ssh/id_ed25519
 
-### 2. Guía para clonar el repositorio
+# Verificar conexión con GitHub
+ssh -T git@github.com
+</code></pre>
+
+### 2. Clonar el repositorio
 
 1.  En la página del repositorio, haga clic en el botón verde **"Code"**.
     <p align="center">
     <img width="250" alt="Botón Code de GitHub" src="https://docs.github.com/assets/cb-13128/images/help/repository/code-button.png">
     </p>
 
-2.  Copie el enlace HTTPS proporcionado.
+2.  Copie el enlace SSH proporcionado.
     <p align="center">
-    <img width="300" alt="Copia de enlace HTTPS de GitHub" src="https://docs.github.com/assets/cb-81898/images/help/repository/remotes-url-global-nav-update.png">
+    <img width="300" alt="Copia de enlace SSH de GitHub" src="https://itknowledgeexchange.techtarget.com/coffee-talk/files/2022/01/github-key-ssh-url-clone.jpg">
     </p>
 
 3.  Abra **Eclipse IDE**.
@@ -71,71 +102,40 @@ Diríjase al sitio oficial de [Git](https://git-scm.com/install/windows) y proce
     </p>
 
 5.  Elija **`Git`** $\rightarrow$ **`Projects from Git`** $\rightarrow$ **`Clone URI`**.
-6.  Pegue el enlace copiado en el campo `URI`.
-7.  Presione **"Next"** y, posteriormente, **"Finish"**.
+6.  Pega la URL SSH. Eclipse debería detectar tus claves automáticamente si el paso 1 fue exitoso.
+7.  Sigue los pasos hasta finalizar (Finish).
 
-Una vez completada la importación, el proyecto estará disponible en su espacio de trabajo, listo para comenzar a trabajar.
+### 3. Ejecutar la Aplicación
+1. En el explorador de proyectos, navegue al paquete `poo`.
+2. Abre el archivo <code>Main.java</code>.
+3. Haz clic derecho $\rightarrow$  **Run As** $\rightarrow$  **Java Application**.
+4. Interactúe con el menú en la consola:
+   * Puede añadir contenido, listar, buscar y eliminar. </li>
+   * **IMPORTANTE**: Seleccione la Opción 5 (Guardar y Salir) para que los cambios se escriban en el archivo <code>contenidos.csv</code>. 
 
 ---
+## <p style="color:#a64d79;">🧪 Etapa 5 (Pruebas Unitarias) </p>
+El proyecto incluye pruebas automatizadas con **JUnit 5** para validar la lógica de negocio sin depender de la interfaz de usuario.
+1. Navegue a la carpeta de `test`.
+2. Localice el paquete `poo` y la clase `PruebaAudioVisual.java`.
+3. Haga clic derecho sobre el archivo.
+4. Seleccione **Run as** $\rightarrow$  **JUnit Test**
 
-## <p style="color:#a64d79;"> Conexión del Proyecto a GitHub (Uso de Claves SSH)</p>
+Las pruebas indicaron que se cumplen con los siguientes requisitos:
+* Inicialización y carga de datos.
+* Generación correcta de IDs consecutivos.
+* Adición de contenidos al catálogo.
+* Eliminación de contenidos (existentes y no existentes).
+* Búsqueda por título.
 
-### 1. Creación del Repositorio Remoto
-Para empezar, cree el repositorio en GitHub:
-1.  De clic en su foto de perfil $\rightarrow$ **`Repositories`** $\rightarrow$ **`New`**.
-    <p align="center">
-    <img width="300" alt="Crear nuevo repositorio en GitHub" src="https://desarrolloweb.com/archivoimg/general/3794.png">
-    </p>
-2.  Complete los campos (Nombre, descripción, visibilidad, etc.) y haga clic en **"Create Repository"**.
+---
+## <p style="color:#a64d79;">📄 Formato del Archivo CSV</p>
+El archivo `contenidos.csv` utiliza el carácter `|` como separador para evitar conflictos con textos normales. El formato general es: <br>
+<p align="center";><code>TIPO|ID|TITULO|DURACION|GENERO|DETALLES_ESPECIFICOS...</code></p> 
 
-### 2. Generación y Configuración de Clave SSH
-
-La autenticación mediante clave SSH es el método recomendado para vincular de forma segura su proyecto local con el repositorio remoto.
-
-1.  Abra la **consola de Git** (Git Bash).
-2.  Verifique la existencia previa de claves: `ls -a ~/.ssh`
-3.  Si no existe el directorio, créelo: `mkdir .ssh`
-4.  Genere la clave SSH:
-    ```bash
-    ssh-keygen -t ed25519 -C "su-correo-github@ejemplo.com"
-    ```
-    > El algoritmo `ed25519` es una solución criptográfica moderna de alta seguridad. Asegúrese de usar el correo electrónico vinculado a su cuenta de GitHub.
-
-5.  Se le solicitará el nombre del archivo (dejar por defecto es común) y una **contraseña (passphrase)**.
-6.  Inicie el agente SSH: `eval 'ssh-agent -s'`
-    > Este agente gestiona las claves privadas en segundo plano para evitar ingresar la contraseña en cada conexión.
-
-7.  Añada la clave privada al agente: `ssh-add ~/.ssh/id_ed25519`
-8.  Copie la clave pública al portapapeles: `clip < ~/.ssh/id_ed25519.pub`
-9.  Finalmente, en GitHub: Perfil $\rightarrow$ **`Settings`** $\rightarrow$ **`SSH and GPG keys`** $\rightarrow$ **`New SSH key`**. Pegue la clave que había copiado,
-    después en "Add SSH Key" y listo
-   ---
- ## 🔒 Generación del Token de Acceso Personal (PAT)
-
-Debido a las políticas de seguridad de GitHub, las operaciones que utilizan el protocolo **HTTPS** (como sincronizar cambios desde Eclipse) ya no aceptan la contraseña de la cuenta. En su lugar, se requiere un **Token de Acceso Personal (PAT)** para la autenticación.
-
-A continuación, se detalla el proceso para generar y usar esta credencial:
-
-### 1. Navegación en la Interfaz de GitHub 
-
-1.  Acceda a la configuración de su cuenta en GitHub: Haga clic en su foto de perfil $\rightarrow$ **`Settings`** (Configuración).
-2.  En el menú lateral, diríjase a **`Developer settings`** (Configuración de desarrollador).
-3.  Seleccione **`Personal access tokens`** $\rightarrow$ **`Tokens (classic)`**.
-4.  Haga clic en el botón **`Generate new token`** (Generar nuevo token).
-
-### 2. Configuración de los Parámetros del Token 
-
-Al generar el nuevo token, se establecen sus permisos y vigencia:
-
-* **Note (Nombre):** Asigne un nombre descriptivo (ej. "Token-Eclipse-POO") para identificar su propósito.
-* **Expiration (Expiración):** Defina la fecha de caducidad del token (se recomienda establecer un límite de tiempo por seguridad).
-* **Scopes (Alcances o Permisos):** Marque los permisos específicos. Para tareas de desarrollo estándar (`push`, `pull`, `fetch`), es esencial seleccionar el alcance de **`repo`**.
-
-### 3. Generación y Almacenamiento 
-
-1.  Una vez definidos los parámetros, haga clic en **`Generate token`**.
-2.  GitHub mostrará el PAT **una única vez**. **Es obligatorio copiar este código inmediatamente** y guardarlo en un gestor de contraseñas seguro, ya que si se pierde, deberá generar uno nuevo.
-
-### 4. Uso del PAT en Eclipse 🔑
-
-Al realizar la primera operación de Git (por ejemplo, un `push` o `pull`) desde Eclipse usando la URL HTTPS, el IDE solicitará credenciales. En el campo de la contraseña, se debe ingresar el **Token de Acceso Personal** generado, en lugar de la contraseña de la cuenta de GitHub.
+**Ejemplo:**
+<pre><code>
+PELICULA|1|Forrest Gump|142|Drama|Paramount Pictures|Tom Hanks
+SERIE|3|Breaking Bad|50|Crimen/Drama|T1:E7;T2:E13
+VIDEO|5|Rock You|240|Pop Rock|The Band|Greatest Hits|Dwayne Johnson
+</code></pre>
