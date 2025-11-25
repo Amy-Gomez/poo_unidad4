@@ -20,7 +20,7 @@ public class GestorContenidoTest {
     // Se ejecuta antes de cada método de prueba para asegurar un estado limpio.
     @BeforeEach
     void setUp() {
-        // Usamos GestorArchivoCSV como implementación concreta para la prueba.
+        // Se usa GestorArchivoCSV como implementación concreta para la prueba.
         // Inyección de dependencia (DIP)
         repositorio = new GestorArchivoCSV(); 
         gestor = new GestorContenido(repositorio);

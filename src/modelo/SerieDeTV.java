@@ -16,7 +16,7 @@ public class SerieDeTV extends ContenidoAudiovisual {
 	    // Asigna el ID cargado del archivo
 	    this.setId(id);
 	    
-	    // Inicializa la lista de temporadas (vacía o con datos cargados si los pasas)
+	    // Inicializa la lista de temporadas (vacía o con datos cargados si se los pasa)
 	    this.temporadas = new ArrayList<>(); 
 	}
 

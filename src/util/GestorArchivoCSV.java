@@ -149,7 +149,7 @@ public class GestorArchivoCSV implements IRepositorioContenido {
         String camposComunes = c.getTitulo() + SEPARADOR + c.getDuracionEnMinutos() + SEPARADOR + c.getGenero();
         
         // PREFIJO: TIPO | ID | TITULO | DURACION | GENERO
-        // CORRECCIÓN CLAVE: El ID debe ir primero, seguido de los campos comunes.
+        // El ID debe ir primero, seguido de los campos comunes.
         String prefijo = c.getId() + SEPARADOR + camposComunes;
         
         if (c instanceof Pelicula) {

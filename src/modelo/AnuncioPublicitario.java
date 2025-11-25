@@ -6,7 +6,7 @@ public class AnuncioPublicitario extends ContenidoAudiovisual {
 	private String agencia; // Declarar la agencia de publicidad que creó el anuncio.
 	private Actor protagonista; // Relación de Agregación: almacenar el Actor principal del anuncio.
 
-	// 1. CONSTRUCTOR CON ID (Para el PARSER CSV / Carga) - (EL QUE YA TENÍAS)
+	// 1. CONSTRUCTOR CON ID (Para el PARSER CSV / Carga)
 	public AnuncioPublicitario(int id, String titulo, int duracionEnMinutos, String genero, 
 	                           String marca, String agencia, Actor protagonista) {
 	    
@@ -22,7 +22,7 @@ public class AnuncioPublicitario extends ContenidoAudiovisual {
 	    this.protagonista = protagonista;
 	}
 
-	// 2. CONSTRUCTOR SIN ID (Para el CONTROLADOR / Nuevos objetos) - (EL QUE NECESITAMOS AÑADIR)
+	// 2. CONSTRUCTOR SIN ID (Para el CONTROLADOR / Nuevos objetos)
 	public AnuncioPublicitario(String titulo, int duracionEnMinutos, String genero, 
 	                           String marca, String agencia, Actor protagonista) {
 	    

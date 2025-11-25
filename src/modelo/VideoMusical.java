@@ -23,7 +23,7 @@ public class VideoMusical extends ContenidoAudiovisual {
 		this.actorInvitado = actorInvitado; 
 }
 
-	//2. CONSTRUCTOR SIN ID (Para el CONTROLADOR / Nuevos objetos) - (EL QUE NECESITAMOS AÑADIR)
+	//2. CONSTRUCTOR SIN ID (Para el CONTROLADOR / Nuevos objetos)
 	public VideoMusical(String titulo, int duracionEnMinutos, String genero, 
             String artista, String album, Actor actorInvitado) {
 
@@ -35,7 +35,7 @@ public class VideoMusical extends ContenidoAudiovisual {
 		this.album = album;
 		this.actorInvitado = actorInvitado;
 
-// El ID se queda en 0 y será asignado por GestorContenido.agregarContenido()
+		// El ID se queda en 0 y será asignado por GestorContenido.agregarContenido()
 }
 
     // implementacion del metodo abstracto (Detalles para Video Musical)

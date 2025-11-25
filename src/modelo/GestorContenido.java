@@ -30,7 +30,7 @@ public class GestorContenido {
             System.out.println(">> GESTOR: " + this.contenidos.size() + " contenidos cargados del repositorio.");
         }
         
-        // ¡LA CLAVE! Se actualiza el contador estático después de cargar los datos (o los dummy).
+        // Se actualiza el contador estático después de cargar los datos (o los dummy).
         actualizarContadorID();
     }
 
